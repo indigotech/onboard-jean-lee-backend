@@ -2,9 +2,11 @@
   "name": "onboard-jean-lee-backend",
   "version": "1.0.0",
   "description": "backend onboarding",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "test": "node index.js"
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +19,11 @@
   },
   "homepage": "https://github.com/indigotech/onboard-jean-lee-backend#readme",
   "dependencies": {
-    "express": "4.18.2",
-    "express-graphql": "0.12.0",
-    "graphql": "16.6.0",
-    "graphql-playground-middleware-express": "1.7.23"
+    "@apollo/server": "^4.3.0",
+    "graphql": "16.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "typescript": "^4.9.4"
   }
 }

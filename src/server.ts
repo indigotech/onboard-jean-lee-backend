@@ -1,17 +1,7 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-
-const typeDefs = `#graphql
-  type Query {
-    hello: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+import { resolvers } from './resolver';
+import { typeDefs } from './schema';
 
 export const initializeApolloServer = async () => {
   const server = new ApolloServer({ typeDefs, resolvers });

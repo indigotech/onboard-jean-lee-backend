@@ -19,11 +19,11 @@
   },
   "homepage": "https://github.com/indigotech/onboard-jean-lee-backend#readme",
   "dependencies": {
-    "@apollo/server": "^4.3.0",
+    "@apollo/server": "4.3.0",
     "graphql": "16.6.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "typescript": "^4.9.4"
+    "@types/node": "18.11.18",
+    "typescript": "4.9.4"
   }
 }

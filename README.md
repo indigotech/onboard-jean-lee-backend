@@ -13,20 +13,20 @@ Server capable of storing data in a database and CRUDing it, developed as part o
 
 ## Running and debugging
 
-1. Make sure the node version from `.nvmrc` is being used.
+- Make sure the node version from `.nvmrc` is being used.
 
-1. Install dependencies.
+- Install dependencies.
 
 ```
 npm install
 ```
 
-1. Create and start local databases. This requires a [Docker environment](https://docs.docker.com/compose/install/) set up.
+- Create and start local databases. This requires a [Docker environment](https://docs.docker.com/compose/install/) set up.
 ```
 docker-compose up -d
 ```
 
-1. Execute the server.
+- Execute the server.
 ```
 npm run start
 ```

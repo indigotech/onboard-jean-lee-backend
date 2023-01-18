@@ -8,5 +8,5 @@ module.exports = {
     'prefer-arrow-callback': 'off',
   },
   root: true,
-  ignorePatterns: ['node_modules', 'dist'],
+  ignorePatterns: ['node_modules', 'dist', 'db', 'build'],
 };

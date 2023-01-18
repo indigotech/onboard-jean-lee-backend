@@ -1,22 +1,21 @@
-import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
+import { AppDataSource } from './data-source';
+import { User } from './entity/User';
+import { initializeApolloServer } from './server';
 
-const typeDefs = `#graphql
-  type Query {
-    hello: String
-  }
-`;
+AppDataSource.initialize()
+  .then(async () => {
+    console.log('Inserting a new user into the database...');
+    const user = new User();
+    user.firstName = 'Jean';
+    user.lastName = 'Lee';
+    user.age = 23;
+    await AppDataSource.manager.save(user);
+    console.log('Saved a new user with id: ' + user.id);
 
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+    console.log('Loading users from the database...');
+    const users = await AppDataSource.manager.find(User);
+    console.log('Loaded users: ', users);
 
-const server = new ApolloServer({ typeDefs, resolvers });
-
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
-
-console.log(`🚀  Server ready at: ${url}`);
+    await initializeApolloServer();
+  })
+  .catch((error) => console.log(error));

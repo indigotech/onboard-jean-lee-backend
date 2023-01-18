@@ -1,36 +1,40 @@
 {
-  "name": "onboard-jean-lee-backend",
-  "version": "1.0.0",
-  "description": "backend onboarding",
-  "main": "index.ts",
-  "type": "module",
-  "scripts": {
-    "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js",
-    "lint": "npx eslint ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/indigotech/onboard-jean-lee-backend.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/indigotech/onboard-jean-lee-backend/issues"
-  },
-  "homepage": "https://github.com/indigotech/onboard-jean-lee-backend#readme",
-  "dependencies": {
-    "@apollo/server": "4.3.0",
-    "graphql": "16.6.0"
-  },
-  "devDependencies": {
-    "@types/node": "18.11.18",
-    "@typescript-eslint/eslint-plugin": "5.48.2",
-    "@typescript-eslint/parser": "5.48.2",
-    "eslint": "8.32.0",
-    "eslint-config-prettier": "8.6.0",
-    "eslint-plugin-prettier": "4.2.1",
-    "prettier": "2.8.3",
-    "typescript": "4.9.4"
-  }
+   "name": "onboard-jean-lee-backend",
+   "version": "1.0.0",
+   "description": "backend onboarding",
+   "main": "index.ts",
+   "scripts": {
+      "compile": "tsc",
+      "start": "ts-node src/index.ts",
+      "lint": "npx eslint .",
+      "typeorm": "typeorm-ts-node-commonjs"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/indigotech/onboard-jean-lee-backend.git"
+   },
+   "author": "",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/indigotech/onboard-jean-lee-backend/issues"
+   },
+   "homepage": "https://github.com/indigotech/onboard-jean-lee-backend#readme",
+   "dependencies": {
+      "@apollo/server": "4.3.0",
+      "graphql": "16.6.0",
+      "typeorm": "0.3.11",
+      "reflect-metadata": "0.1.13",
+      "pg": "8.8.0"
+   },
+   "devDependencies": {
+      "@types/node": "18.11.18",
+      "@typescript-eslint/eslint-plugin": "5.48.2",
+      "@typescript-eslint/parser": "5.48.2",
+      "eslint": "8.32.0",
+      "eslint-config-prettier": "8.6.0",
+      "eslint-plugin-prettier": "4.2.1",
+      "prettier": "2.8.3",
+      "typescript": "4.9.4",
+      "ts-node": "10.7.0"
+   }
 }

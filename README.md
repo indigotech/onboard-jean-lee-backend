@@ -4,8 +4,29 @@ Server capable of storing data in a database and CRUDing it, developed as part o
 
 ## Environment and tools
 
-TODO
+- Node
+- Typescript
+- GraphQL
+- ApolloServer
+- TypeORM
+- Docker
 
 ## Running and debugging
 
-TODO
+- Make sure the node version from `.nvmrc` is being used.
+
+- Install dependencies.
+
+```
+npm install
+```
+
+- Create and start local databases. This requires a [Docker environment](https://docs.docker.com/compose/install/) set up.
+```
+docker-compose up -d
+```
+
+- Execute the server in watcher mode.
+```
+npm run dev
+```

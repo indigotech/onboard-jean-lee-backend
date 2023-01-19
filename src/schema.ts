@@ -11,7 +11,7 @@ input UserInput {
 }
 
 type User {
-  id: String!
+  id: Int!
   name: String!
   email: String!
   birthDate: String!

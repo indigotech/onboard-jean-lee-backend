@@ -1,8 +1,13 @@
 import { AppDataSource } from './data-source';
 import { initializeApolloServer } from './server';
 
-AppDataSource.initialize()
-  .then(async () => {
+export const initializeServer = async () => {
+  try {
+    await AppDataSource.initialize();
     await initializeApolloServer();
-  })
-  .catch((error) => console.log(error));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+initializeServer();

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { initializeServer } from '..';
 import { expect } from 'chai';
+import { initializeServer } from '../server';
 
 describe('test hello query', () => {
   before('starting server', async () => {

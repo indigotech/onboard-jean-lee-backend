@@ -26,7 +26,7 @@ npm install
 docker-compose up -d
 ```
 
-- Execute the server.
+- Execute the server in watcher mode.
 ```
-npm run start
+npm run dev
 ```

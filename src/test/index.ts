@@ -10,11 +10,11 @@ import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import * as crypto from 'crypto';
 
-describe('Query - hello', () => {
-  before('starting server', async () => {
-    await initializeServer();
-  });
+before('starting server', async () => {
+  await initializeServer();
+});
 
+describe('Query - hello', () => {
   it('should get the correct response for the hello query', async () => {
     const response = await axios.post(`http://localhost:4000`, { query: 'query { hello }' });
     expect(response.data).to.be.deep.equal({ data: { hello: 'Hello world!' } });
@@ -22,8 +22,8 @@ describe('Query - hello', () => {
 });
 
 describe('Mutation - createUser', () => {
-  before('starting server', async () => {
-    await initializeServer();
+  afterEach('clearing User table', () => {
+    AppDataSource.getRepository(User).clear();
   });
 
   it('should successfully create a new user', async () => {

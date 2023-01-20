@@ -3,13 +3,6 @@ type Query {
   hello: String
 }
 
-input UserInput {
-  name: String!
-  email: String!
-  password: String!
-  birthDate: String!
-}
-
 type User {
   id: Int!
   name: String!
@@ -17,7 +10,25 @@ type User {
   birthDate: String!
 }
 
+input UserInput {
+  name: String!
+  email: String!
+  password: String!
+  birthDate: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  user: User!
+  token: String!
+}
+
 type Mutation {
   createUser(input: UserInput!): User
+  login(input: LoginInput!): LoginResponse
 }
 `;

@@ -30,5 +30,13 @@ export const resolvers = {
 
       return user;
     },
+    login: () => {
+      return mockLogin;
+    },
   },
+};
+
+export const mockLogin = {
+  user: { id: 1, name: 'Test', email: 'test@test.com', birthDate: '01-01-2000' },
+  token: 'token',
 };

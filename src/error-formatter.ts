@@ -22,7 +22,7 @@ export const errorFormatter = (formattedError: GraphQLFormattedError, error: unk
   const originalError = unwrapResolverError(error) as ServerError;
 
   if (originalError?.code && originalError?.message) {
-    return originalError;
+    return { code: originalError.code, message: originalError.message, additionalInfo: originalError.additionalInfo };
   }
 
   return { code: StatusCodes.InternalServerError, message: 'Internal server error' };

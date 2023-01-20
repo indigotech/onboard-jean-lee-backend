@@ -1,3 +1,6 @@
+import { AppDataSource } from './data-source';
+import { User } from './entity/User';
+
 export const passwordValidator = (password: string) => {
   if (password.length < 6) {
     return false;
@@ -12,4 +15,9 @@ export const passwordValidator = (password: string) => {
   }
 
   return true;
+};
+
+export const emailValidator = async (email: string) => {
+  const emailInUse = !!(await AppDataSource.getRepository(User).findOneBy({ email }));
+  return !emailInUse;
 };

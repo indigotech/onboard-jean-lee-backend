@@ -39,14 +39,19 @@ describe('Mutation - createUser', () => {
 
     const databaseUser = await AppDataSource.getRepository(User).findOneBy({ id: responseUser.id });
 
-    expect(responseUser).to.have.property('id');
-    expect(responseUser.name).to.be.eq(userInput.name);
-    expect(responseUser.email).to.be.eq(userInput.email);
-    expect(responseUser.birthDate).to.be.eq(userInput.birthDate);
+    expect(responseUser).to.be.deep.eq({
+      id: databaseUser.id,
+      name: userInput.name,
+      email: userInput.email,
+      birthDate: userInput.birthDate,
+    });
     expect(responseUser.password).to.be.undefined;
-    expect(databaseUser.name).to.be.eq(userInput.name);
-    expect(databaseUser.email).to.be.eq(userInput.email);
-    expect(databaseUser.birthDate).to.be.eq(userInput.birthDate);
-    expect(databaseUser.password).to.be.eq(hashedPassword);
+    expect(databaseUser).to.be.deep.eq({
+      id: responseUser.id,
+      name: userInput.name,
+      email: userInput.email,
+      birthDate: userInput.birthDate,
+      password: hashedPassword,
+    });
   });
 });

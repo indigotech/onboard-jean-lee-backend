@@ -9,14 +9,12 @@ export const resolvers = {
   },
   Mutation: {
     createUser: async (parent, args) => {
-      const user = Object.assign(new User(), args.input);
+      const hashedPassword = crypto.createHash('sha1').update(args.input.password).digest('base64');
+      const user = Object.assign(new User(), { ...args.input, password: hashedPassword });
 
-      if (!passwordValidator(user.password)) {
+      if (!passwordValidator(args.input.password)) {
         throw new Error('Password is not valid');
       }
-
-      const hashedPassword = crypto.createHash('sha1').update(user.password).digest('base64');
-      user.password == hashedPassword;
 
       await AppDataSource.manager.save(user);
 

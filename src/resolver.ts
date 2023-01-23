@@ -1,10 +1,10 @@
 import * as crypto from 'crypto';
-import { sign } from 'jsonwebtoken';
 import { AppDataSource } from './data-source';
 import { User } from './entity/User';
 import { emailValidator, passwordValidator } from './validators';
 import { ServerError, StatusCodes } from './error-formatter';
 import { emailAvailableUseCase } from './domain/users/email-available.use-case';
+import { JwtService } from './jwt.service';
 
 export const resolvers = {
   Query: {
@@ -43,7 +43,7 @@ export const resolvers = {
         throw new ServerError('Password is incorrect', StatusCodes.Unauthorized);
       }
 
-      return { user: dbUser, token: sign({ data: { id: dbUser.id } }, process.env.JWT_SECRET) };
+      return { user: dbUser, token: JwtService.sign({ id: dbUser.id }) };
     },
   },
 };

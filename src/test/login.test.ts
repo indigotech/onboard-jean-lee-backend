@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { expect } from 'chai';
+import { decode, JwtPayload } from 'jsonwebtoken';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { StatusCodes } from '../error-formatter';

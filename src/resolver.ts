@@ -1,4 +1,5 @@
 import * as crypto from 'crypto';
+import { sign } from 'jsonwebtoken';
 import { AppDataSource } from './data-source';
 import { User } from './entity/User';
 import { emailValidator, passwordValidator } from './validators';

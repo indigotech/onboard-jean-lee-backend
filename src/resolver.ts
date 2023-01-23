@@ -30,8 +30,19 @@ export const resolvers = {
 
       return user;
     },
-    login: () => {
-      return mockLogin;
+    login: async (parent, args) => {
+      const hashedPassword = crypto.scryptSync(args.input.password, 'salt', 64).toString('base64');
+      const dbUser = await AppDataSource.manager.findOneBy(User, { email: args.input.email });
+
+      if (!dbUser) {
+        throw new ServerError('User not found', StatusCodes.NotFound);
+      }
+
+      if (dbUser.password !== hashedPassword) {
+        throw new ServerError('Password is incorrect', StatusCodes.BadUserInput);
+      }
+
+      return { user: dbUser, token: '' };
     },
   },
 };

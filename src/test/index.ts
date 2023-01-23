@@ -28,7 +28,7 @@ describe('Mutation - createUser', () => {
 
   it('should successfully create a new user', async () => {
     const userInput = { name: 'Test', email: 'test@test.com', password: 'password1', birthDate: '01-01-2000' };
-    const hashedPassword = crypto.createHash('sha1').update(userInput.password).digest('base64');
+    const hashedPassword = crypto.scryptSync(userInput.password, process.env.CRYPTO_SALT, 64).toString();
 
     const responseUser = (
       await axios.post(`http://localhost:4000`, {

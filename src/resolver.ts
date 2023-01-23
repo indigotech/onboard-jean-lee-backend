@@ -9,7 +9,7 @@ export const resolvers = {
   },
   Mutation: {
     createUser: async (parent, args) => {
-      const hashedPassword = crypto.scryptSync(args.input.password, 'salt', 64).toString();
+      const hashedPassword = crypto.scryptSync(args.input.password, process.env.CRYPTO_SALT, 64).toString();
       const user = Object.assign(new User(), { ...args.input, password: hashedPassword });
 
       if (!passwordValidator(args.input.password)) {

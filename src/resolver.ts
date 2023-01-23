@@ -31,7 +31,7 @@ export const resolvers = {
       return user;
     },
     login: async (parent, args) => {
-      const hashedPassword = crypto.scryptSync(args.input.password, 'salt', 64).toString('base64');
+      const hashedPassword = crypto.scryptSync(args.input.password, process.env.CRYPTO_SALT, 64).toString();
       const dbUser = await AppDataSource.manager.findOneBy(User, { email: args.input.email });
 
       if (!dbUser) {
@@ -39,15 +39,10 @@ export const resolvers = {
       }
 
       if (dbUser.password !== hashedPassword) {
-        throw new ServerError('Password is incorrect', StatusCodes.BadUserInput);
+        throw new ServerError('Password is incorrect', StatusCodes.Unauthorized);
       }
 
       return { user: dbUser, token: '' };
     },
   },
-};
-
-export const mockLogin = {
-  user: { id: 1, name: 'Test', email: 'test@test.com', birthDate: '01-01-2000' },
-  token: 'token',
 };

@@ -4,6 +4,7 @@ import { unwrapResolverError } from '@apollo/server/errors';
 export enum StatusCodes {
   Success = 200,
   BadUserInput = 400,
+  Unauthorized = 401,
   NotFound = 404,
   InternalServerError = 500,
 }

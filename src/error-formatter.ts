@@ -27,5 +27,5 @@ export const errorFormatter = (formattedError: GraphQLFormattedError, error: unk
     return { code: originalError.code, message: originalError.message, additionalInfo: originalError.additionalInfo };
   }
 
-  return { code: StatusCodes.InternalServerError, message: 'Internal server error' };
+  return { ...formattedError, code: StatusCodes.InternalServerError, message: 'Internal server error' };
 };

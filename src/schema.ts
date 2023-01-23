@@ -20,6 +20,7 @@ input UserInput {
 input LoginInput {
   email: String!
   password: String!
+  rememberMe: Boolean
 }
 
 type LoginResponse {

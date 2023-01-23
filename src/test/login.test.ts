@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { expect } from 'chai';
+import { decode, JwtPayload } from 'jsonwebtoken';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { StatusCodes } from '../error-formatter';
@@ -38,11 +39,16 @@ describe('Mutation - login', () => {
       await axios.post(`http://localhost:4000`, { query: print(loginQuery), variables: { input: loginInput } })
     ).data.data.login;
     const databaseUser = await AppDataSource.getRepository(User).findOneBy({ email: loginInput.email });
+    const decodedToken = decode(loginResponse.token) as JwtPayload;
 
-    expect(loginResponse).to.be.deep.eq({
-      user: { id: databaseUser.id, name: userInput.name, email: userInput.email, birthDate: userInput.birthDate },
-      token: '',
+    expect(loginResponse.user).to.be.deep.eq({
+      id: databaseUser.id,
+      name: userInput.name,
+      email: userInput.email,
+      birthDate: userInput.birthDate,
     });
+    expect(decodedToken.data).to.be.deep.eq({ id: databaseUser.id });
+    expect(decodedToken.iat).to.be.approximately(Date.now() / 1000, 60);
   });
 
   it('should return an error if there is no user with the input email', async () => {

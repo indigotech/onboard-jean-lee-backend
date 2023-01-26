@@ -7,6 +7,7 @@ import { StatusCodes } from '../error-formatter';
 import { gql } from 'graphql-tag';
 import { print } from 'graphql';
 import { UserFragment } from './fragments.test';
+import { JwtService } from '../jwt.service';
 
 const query = gql`
   mutation CreateUser($input: UserInput!) {
@@ -24,12 +25,19 @@ describe('Mutation - createUser', () => {
   it('should successfully create a new user', async () => {
     const userInput = { name: 'Test', email: 'test@test.com', password: 'password1', birthDate: '01-01-2000' };
     const hashedPassword = crypto.scryptSync(userInput.password, process.env.CRYPTO_SALT, 64).toString();
+    const authToken = JwtService.sign({ id: 1 });
 
     const responseUser = (
-      await axios.post(`http://localhost:4000`, {
-        query: print(query),
-        variables: { input: userInput },
-      })
+      await axios.post(
+        `http://localhost:4000`,
+        {
+          query: print(query),
+          variables: { input: userInput },
+        },
+        {
+          headers: { authorization: authToken },
+        },
+      )
     ).data.data.createUser;
 
     const databaseUser = await AppDataSource.getRepository(User).findOneBy({ id: responseUser.id });
@@ -52,13 +60,19 @@ describe('Mutation - createUser', () => {
 
   it('should return an error if the password is invalid', async () => {
     const userInput = { name: 'Test', email: 'test@test.com', password: 'invalid', birthDate: '01-01-2000' };
+    const authToken = JwtService.sign({ id: 1 });
 
     const response = (
-      await axios.post(`http://localhost:4000`, {
-        query: print(query),
-
-        variables: { input: userInput },
-      })
+      await axios.post(
+        `http://localhost:4000`,
+        {
+          query: print(query),
+          variables: { input: userInput },
+        },
+        {
+          headers: { authorization: authToken },
+        },
+      )
     ).data;
     const expectedError = { code: StatusCodes.BadUserInput, message: 'Password is not valid' };
 
@@ -68,21 +82,32 @@ describe('Mutation - createUser', () => {
 
   it('should return an error if the email is already in use', async () => {
     const userInput = { name: 'Test', email: 'test@test.com', password: 'password1', birthDate: '01-01-2000' };
+    const authToken = JwtService.sign({ id: 1 });
 
     const firstResponseUser = (
-      await axios.post(`http://localhost:4000`, {
-        query: print(query),
-
-        variables: { input: userInput },
-      })
+      await axios.post(
+        `http://localhost:4000`,
+        {
+          query: print(query),
+          variables: { input: userInput },
+        },
+        {
+          headers: { authorization: authToken },
+        },
+      )
     ).data.data.createUser;
 
     const secondResponse = (
-      await axios.post(`http://localhost:4000`, {
-        query: print(query),
-
-        variables: { input: userInput },
-      })
+      await axios.post(
+        `http://localhost:4000`,
+        {
+          query: print(query),
+          variables: { input: userInput },
+        },
+        {
+          headers: { authorization: authToken },
+        },
+      )
     ).data;
 
     expect(firstResponseUser).to.be.deep.eq({

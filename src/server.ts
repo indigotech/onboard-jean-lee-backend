@@ -10,6 +10,7 @@ export const initializeApolloServer = async () => {
 
   const { url } = await startStandaloneServer(server, {
     listen: { port: process.env.PORT ? +process.env.PORT : 4000 },
+    context: async ({ req }) => ({ token: req.headers?.authorization }),
   });
 
   console.log(`🚀  Server ready at: ${url}`);

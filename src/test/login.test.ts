@@ -31,10 +31,16 @@ const userInput = { name: 'Test', email: 'test@test.com', password: 'password1',
 
 describe('Mutation - login', () => {
   before('create test user', async () => {
-    await axios.post(`http://localhost:4000`, {
-      query: print(createUserQuery),
-      variables: { input: userInput },
-    });
+    const authToken = JwtService.sign({ id: 1 });
+
+    await axios.post(
+      `http://localhost:4000`,
+      {
+        query: print(createUserQuery),
+        variables: { input: userInput },
+      },
+      { headers: { authorization: authToken } },
+    );
   });
 
   it('should receive correct response from the login mutation', async () => {

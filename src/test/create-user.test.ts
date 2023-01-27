@@ -4,8 +4,17 @@ import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import * as crypto from 'crypto';
 import { StatusCodes } from '../error-formatter';
+import { gql } from 'graphql-tag';
+import { print } from 'graphql';
+import { UserFragment } from './fragments.test';
 
-const query = 'mutation CreateUser($input: UserInput!) { createUser(input: $input) { id name email birthDate } }';
+const query = gql`
+  mutation CreateUser($input: UserInput!) {
+    createUser(input: $input) {
+      ${UserFragment}
+    }
+  }
+`;
 
 describe('Mutation - createUser', () => {
   afterEach('clearing User table', () => {
@@ -18,7 +27,7 @@ describe('Mutation - createUser', () => {
 
     const responseUser = (
       await axios.post(`http://localhost:4000`, {
-        query,
+        query: print(query),
         variables: { input: userInput },
       })
     ).data.data.createUser;
@@ -46,7 +55,8 @@ describe('Mutation - createUser', () => {
 
     const response = (
       await axios.post(`http://localhost:4000`, {
-        query,
+        query: print(query),
+
         variables: { input: userInput },
       })
     ).data;
@@ -61,14 +71,16 @@ describe('Mutation - createUser', () => {
 
     const firstResponseUser = (
       await axios.post(`http://localhost:4000`, {
-        query,
+        query: print(query),
+
         variables: { input: userInput },
       })
     ).data.data.createUser;
 
     const secondResponse = (
       await axios.post(`http://localhost:4000`, {
-        query,
+        query: print(query),
+
         variables: { input: userInput },
       })
     ).data;

@@ -58,6 +58,65 @@ describe('Mutation - createUser', () => {
     });
   });
 
+  it('should return an error if the user is not authorized', async () => {
+    const userInput = { name: 'Test', email: 'test@test.com', password: 'password1', birthDate: '01-01-2000' };
+
+    const response = (
+      await axios.post(`http://localhost:4000`, {
+        query,
+        variables: { input: userInput },
+      })
+    ).data;
+
+    const expectedError = { code: StatusCodes.Unauthorized, message: 'Invalid token' };
+
+    expect(response.data.createUser).to.be.null;
+    expect(response.errors[0]).to.be.deep.eq(expectedError);
+  });
+
+  it('should return an error if the token is invalid', async () => {
+    const userInput = { name: 'Test', email: 'test@test.com', password: 'password1', birthDate: '01-01-2000' };
+    const authToken = JwtService.sign({});
+
+    const response = (
+      await axios.post(
+        `http://localhost:4000`,
+        {
+          query,
+          variables: { input: userInput },
+        },
+        { headers: { authorization: authToken } },
+      )
+    ).data;
+
+    const expectedError = { code: StatusCodes.Unauthorized, message: 'Invalid token' };
+
+    expect(response.data.createUser).to.be.null;
+    expect(response.errors[0]).to.be.deep.eq(expectedError);
+  });
+
+  it('should return an error if the token is expired', async () => {
+    const userInput = { name: 'Test', email: 'test@test.com', password: 'password1', birthDate: '01-01-2000' };
+    const authToken =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3fSwiaWF0IjoxNjc0NzU1OTYxLCJleHAiOjE2NzQ3NTk1NjF9.pwEShSspHjgUKLchs7-ZvbDRQhy2JOG5_gPk_hPr3ck';
+
+    const response = (
+      await axios.post(
+        `http://localhost:4000`,
+        {
+          query,
+          variables: { input: userInput },
+        },
+        { headers: { authorization: authToken } },
+      )
+    ).data;
+
+    const expectedError = { code: StatusCodes.Unauthorized, message: 'Invalid token' };
+
+    expect(response.data.createUser).to.be.null;
+    expect(response.errors[0]).to.be.deep.eq(expectedError);
+  });
+
   it('should return an error if the password is invalid', async () => {
     const userInput = { name: 'Test', email: 'test@test.com', password: 'invalid', birthDate: '01-01-2000' };
     const authToken = JwtService.sign({ id: 1 });

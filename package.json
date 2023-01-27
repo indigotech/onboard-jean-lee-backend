@@ -8,7 +8,7 @@
       "dev": "ts-node src/index.ts",
       "lint": "npx eslint .",
       "typeorm": "typeorm-ts-node-commonjs",
-      "test": "mocha --require ts-node/register src/test/*.ts"
+      "test": "mocha --require ts-node/register src/test/test-setup.ts src/test/*.ts"
    },
    "repository": {
       "type": "git",
@@ -25,6 +25,7 @@
       "axios": "1.2.3",
       "dotenv": "16.0.3",
       "graphql": "16.6.0",
+      "graphql-tag": "2.12.6",
       "pg": "8.8.0",
       "reflect-metadata": "0.1.13",
       "typeorm": "0.3.11"

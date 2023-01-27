@@ -1,9 +1,10 @@
+import * as crypto from 'crypto';
 import { AppDataSource } from './data-source';
 import { User } from './entity/User';
 import { emailValidator, passwordValidator } from './validators';
-import * as crypto from 'crypto';
 import { ServerError, StatusCodes } from './error-formatter';
 import { emailAvailableUseCase } from './domain/users/email-available.use-case';
+import { JwtService } from './jwt.service';
 
 export const resolvers = {
   Query: {
@@ -42,7 +43,12 @@ export const resolvers = {
         throw new ServerError('Password is incorrect', StatusCodes.Unauthorized);
       }
 
-      return { user: dbUser, token: '' };
+      return { user: dbUser, token: JwtService.sign({ id: dbUser.id }) };
     },
   },
+};
+
+export const mockLogin = {
+  user: { id: 1, name: 'Test', email: 'test@test.com', birthDate: '01-01-2000' },
+  token: 'token',
 };

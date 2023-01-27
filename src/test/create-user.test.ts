@@ -63,7 +63,7 @@ describe('Mutation - createUser', () => {
 
     const response = (
       await axios.post(`http://localhost:4000`, {
-        query,
+        query: print(query),
         variables: { input: userInput },
       })
     ).data;
@@ -82,7 +82,7 @@ describe('Mutation - createUser', () => {
       await axios.post(
         `http://localhost:4000`,
         {
-          query,
+          query: print(query),
           variables: { input: userInput },
         },
         { headers: { authorization: authToken } },
@@ -104,7 +104,7 @@ describe('Mutation - createUser', () => {
       await axios.post(
         `http://localhost:4000`,
         {
-          query,
+          query: print(query),
           variables: { input: userInput },
         },
         { headers: { authorization: authToken } },

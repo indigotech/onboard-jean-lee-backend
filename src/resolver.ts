@@ -1,7 +1,9 @@
 import { AppDataSource } from './data-source';
 import { User } from './entity/User';
-import { passwordValidator } from './validators';
+import { emailValidator, passwordValidator } from './validators';
 import * as crypto from 'crypto';
+import { ServerError, StatusCodes } from './error-formatter';
+import { emailAvailableUseCase } from './domain/users/email-available.use-case';
 
 export const resolvers = {
   Query: {
@@ -13,7 +15,15 @@ export const resolvers = {
       const user = Object.assign(new User(), { ...args.input, password: hashedPassword });
 
       if (!passwordValidator(args.input.password)) {
-        throw new Error('Password is not valid');
+        throw new ServerError('Password is not valid', StatusCodes.BadUserInput);
+      }
+
+      if (!emailValidator(args.input.email)) {
+        throw new ServerError('Email is not valid', StatusCodes.BadUserInput);
+      }
+
+      if (!(await emailAvailableUseCase(user.email))) {
+        throw new ServerError('Email is already in use', StatusCodes.Success);
       }
 
       await AppDataSource.manager.save(user);

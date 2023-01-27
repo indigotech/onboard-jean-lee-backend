@@ -66,7 +66,6 @@ describe('Mutation - createUser', () => {
       })
     ).data;
     const expectedError = { code: StatusCodes.BadUserInput, message: 'Password is not valid' };
-    console.log(response);
 
     expect(response.data.createUser).to.be.null;
     expect(response.errors[0]).to.be.deep.eq(expectedError);

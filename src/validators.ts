@@ -1,5 +1,5 @@
-import { AppDataSource } from './data-source';
-import { User } from './entity/User';
+const EMAIL_REGEX =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const passwordValidator = (password: string) => {
   if (password.length < 6) {
@@ -17,7 +17,6 @@ export const passwordValidator = (password: string) => {
   return true;
 };
 
-export const emailValidator = async (email: string) => {
-  const emailInUse = !!(await AppDataSource.getRepository(User).findOneBy({ email }));
-  return !emailInUse;
+export const emailValidator = (email: string) => {
+  return EMAIL_REGEX.test(email);
 };

@@ -9,6 +9,19 @@ import { JwtService } from './jwt.service';
 export const resolvers = {
   Query: {
     hello: () => 'Hello world!',
+    user: async (_parent, args, context) => {
+      if (!JwtService.validate(context.token)) {
+        throw new ServerError('Invalid token', StatusCodes.Unauthorized);
+      }
+
+      const user = await AppDataSource.getRepository(User).findOneBy({ id: args.id });
+
+      if (!user) {
+        throw new ServerError('User not found', StatusCodes.NotFound);
+      }
+
+      return user;
+    },
   },
   Mutation: {
     createUser: async (_parent, args, context) => {
@@ -34,7 +47,7 @@ export const resolvers = {
 
       return user;
     },
-    login: async (parent, args) => {
+    login: async (_parent, args) => {
       const hashedPassword = crypto.scryptSync(args.input.password, process.env.CRYPTO_SALT, 64).toString();
       const dbUser = await AppDataSource.manager.findOneBy(User, { email: args.input.email });
 

@@ -17,8 +17,8 @@ const query = gql`
 `;
 
 describe('Mutation - createUser', () => {
-  afterEach('clearing User table', () => {
-    AppDataSource.getRepository(User).clear();
+  afterEach('clearing User table', async () => {
+    await AppDataSource.getRepository(User).clear();
   });
 
   it('should successfully create a new user', async () => {

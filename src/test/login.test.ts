@@ -8,6 +8,10 @@ import { LoginFragment, UserFragment } from './fragments.test';
 import { print } from 'graphql';
 import { JwtService } from '../jwt.service';
 
+const ONE_MINUTE = 60;
+const ONE_HOUR = 60 * ONE_MINUTE;
+const ONE_WEEK = 7 * 24 * ONE_HOUR;
+
 const loginQuery = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
@@ -22,6 +26,7 @@ const createUserQuery = gql`
     }
   }
 `;
+
 const userInput = { name: 'Test', email: 'test@test.com', password: 'password1', birthDate: '01-01-2000' };
 
 describe('Mutation - login', () => {
@@ -48,7 +53,28 @@ describe('Mutation - login', () => {
       birthDate: userInput.birthDate,
     });
     expect(decodedToken.data).to.be.deep.eq({ id: databaseUser.id });
-    expect(decodedToken.iat).to.be.approximately(Date.now() / 1000, 60);
+    expect(decodedToken.iat).to.be.approximately(Date.now() / 1000, ONE_MINUTE);
+    expect(decodedToken.exp).to.be.approximately(Date.now() / 1000 + ONE_HOUR, ONE_MINUTE);
+  });
+
+  it('should receive correct response from the login mutation with extended token duration', async () => {
+    const loginInput = { email: userInput.email, password: userInput.password, rememberMe: true };
+
+    const loginResponse = (
+      await axios.post(`http://localhost:4000`, { query: print(loginQuery), variables: { input: loginInput } })
+    ).data.data.login;
+    const databaseUser = await AppDataSource.getRepository(User).findOneBy({ email: loginInput.email });
+    const decodedToken = JwtService.decode(loginResponse.token);
+
+    expect(loginResponse.user).to.be.deep.eq({
+      id: databaseUser.id,
+      name: userInput.name,
+      email: userInput.email,
+      birthDate: userInput.birthDate,
+    });
+    expect(decodedToken.data).to.be.deep.eq({ id: databaseUser.id });
+    expect(decodedToken.iat).to.be.approximately(Date.now() / 1000, ONE_MINUTE);
+    expect(decodedToken.exp).to.be.approximately(Date.now() / 1000 + ONE_WEEK, ONE_MINUTE);
   });
 
   it('should return an error if there is no user with the input email', async () => {

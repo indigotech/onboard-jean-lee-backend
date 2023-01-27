@@ -43,7 +43,7 @@ export const resolvers = {
         throw new ServerError('Password is incorrect', StatusCodes.Unauthorized);
       }
 
-      return { user: dbUser, token: JwtService.sign({ id: dbUser.id }) };
+      return { user: dbUser, token: JwtService.sign({ id: dbUser.id }, args.input.rememberMe) };
     },
   },
 };

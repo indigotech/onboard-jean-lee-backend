@@ -1,10 +1,11 @@
 import { sign, decode, JwtPayload } from 'jsonwebtoken';
 
 const ONE_HOUR = '1h';
+const ONE_WEEK = '7d';
 
 export class JwtService {
-  static sign(data) {
-    return sign({ data }, process.env.JWT_SECRET, { expiresIn: ONE_HOUR });
+  static sign(data, extendedExpiration?: boolean) {
+    return sign({ data }, process.env.JWT_SECRET, { expiresIn: extendedExpiration ? ONE_WEEK : ONE_HOUR });
   }
 
   static decode(token): JwtPayload {

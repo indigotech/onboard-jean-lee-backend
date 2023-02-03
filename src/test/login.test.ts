@@ -1,12 +1,11 @@
-import axios from 'axios';
 import { expect } from 'chai';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { StatusCodes } from '../error-formatter';
 import { gql } from 'graphql-tag';
 import { LoginFragment, UserFragment } from './fragments.test';
-import { print } from 'graphql';
 import { JwtService } from '../jwt.service';
+import { requestMaker } from './request-maker';
 
 const ONE_MINUTE = 60;
 const ONE_HOUR = 60 * ONE_MINUTE;
@@ -33,22 +32,18 @@ describe('Mutation - login', () => {
   before('create test user', async () => {
     const authToken = JwtService.sign({ id: 1 });
 
-    await axios.post(
-      `http://localhost:4000`,
-      {
-        query: print(createUserQuery),
-        variables: { input: userInput },
-      },
-      { headers: { authorization: authToken } },
-    );
+    await requestMaker.post({
+      query: createUserQuery,
+      variables: { input: userInput },
+      headers: { authorization: authToken },
+    });
   });
 
   it('should receive correct response from the login mutation', async () => {
     const loginInput = { email: userInput.email, password: userInput.password };
 
-    const loginResponse = (
-      await axios.post(`http://localhost:4000`, { query: print(loginQuery), variables: { input: loginInput } })
-    ).data.data.login;
+    const loginResponse = (await requestMaker.post({ query: loginQuery, variables: { input: loginInput } })).data.data
+      .login;
     const databaseUser = await AppDataSource.getRepository(User).findOneBy({ email: loginInput.email });
     const decodedToken = JwtService.decode(loginResponse.token);
 
@@ -66,9 +61,8 @@ describe('Mutation - login', () => {
   it('should receive correct response from the login mutation with extended token duration', async () => {
     const loginInput = { email: userInput.email, password: userInput.password, rememberMe: true };
 
-    const loginResponse = (
-      await axios.post(`http://localhost:4000`, { query: print(loginQuery), variables: { input: loginInput } })
-    ).data.data.login;
+    const loginResponse = (await requestMaker.post({ query: loginQuery, variables: { input: loginInput } })).data.data
+      .login;
     const databaseUser = await AppDataSource.getRepository(User).findOneBy({ email: loginInput.email });
     const decodedToken = JwtService.decode(loginResponse.token);
 
@@ -86,9 +80,7 @@ describe('Mutation - login', () => {
   it('should return an error if there is no user with the input email', async () => {
     const loginInput = { email: 'invalid@email.com', password: userInput.password };
 
-    const loginResponse = (
-      await axios.post(`http://localhost:4000`, { query: print(loginQuery), variables: { input: loginInput } })
-    ).data;
+    const loginResponse = (await requestMaker.post({ query: loginQuery, variables: { input: loginInput } })).data;
 
     expect(loginResponse.data.login).to.be.null;
     expect(loginResponse.errors[0]).to.be.deep.eq({ code: StatusCodes.NotFound, message: 'User not found' });
@@ -97,9 +89,7 @@ describe('Mutation - login', () => {
   it('should return an error if the password is incorrect', async () => {
     const loginInput = { email: userInput.email, password: 'incorrect password' };
 
-    const loginResponse = (
-      await axios.post(`http://localhost:4000`, { query: print(loginQuery), variables: { input: loginInput } })
-    ).data;
+    const loginResponse = (await requestMaker.post({ query: loginQuery, variables: { input: loginInput } })).data;
 
     expect(loginResponse.data.login).to.be.null;
     expect(loginResponse.errors[0]).to.be.deep.eq({ code: StatusCodes.Unauthorized, message: 'Password is incorrect' });

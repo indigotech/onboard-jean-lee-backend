@@ -11,7 +11,10 @@ export const resolvers = {
     hello: () => 'Hello world!',
   },
   Mutation: {
-    createUser: async (parent, args) => {
+    createUser: async (_parent, args, context) => {
+      if (!JwtService.validate(context.token)) {
+        throw new ServerError('Invalid token', StatusCodes.Unauthorized);
+      }
       const hashedPassword = crypto.scryptSync(args.input.password, process.env.CRYPTO_SALT, 64).toString();
       const user = Object.assign(new User(), { ...args.input, password: hashedPassword });
 

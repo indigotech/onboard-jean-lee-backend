@@ -1,35 +1,38 @@
-export const typeDefs = `#graphql
-type Query {
-  hello: String
-}
+import { gql } from 'graphql-tag';
 
-type User {
-  id: Int!
-  name: String!
-  email: String!
-  birthDate: String!
-}
+export const typeDefs = gql`
+  type User {
+    id: Int!
+    name: String!
+    email: String!
+    birthDate: String!
+  }
 
-input UserInput {
-  name: String!
-  email: String!
-  password: String!
-  birthDate: String!
-}
+  type Query {
+    hello: String
+    user(id: Int!): User
+  }
 
-input LoginInput {
-  email: String!
-  password: String!
-  rememberMe: Boolean
-}
+  input UserInput {
+    name: String!
+    email: String!
+    password: String!
+    birthDate: String!
+  }
 
-type LoginResponse {
-  user: User!
-  token: String!
-}
+  input LoginInput {
+    email: String!
+    password: String!
+    rememberMe: Boolean
+  }
 
-type Mutation {
-  createUser(input: UserInput!): User
-  login(input: LoginInput!): LoginResponse
-}
+  type LoginResponse {
+    user: User!
+    token: String!
+  }
+
+  type Mutation {
+    createUser(input: UserInput!): User
+    login(input: LoginInput!): LoginResponse
+  }
 `;

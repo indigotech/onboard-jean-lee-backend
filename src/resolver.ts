@@ -1,10 +1,11 @@
 import * as crypto from 'crypto';
-import { AppDataSource } from './data-source';
-import { User } from './entity/User';
+import { AppDataSource } from './data/data-source';
+import { User } from './data/entity/User';
 import { emailValidator, passwordValidator } from './validators';
 import { ServerError, StatusCodes } from './error-formatter';
 import { emailAvailableUseCase } from './domain/users/email-available.use-case';
 import { JwtService } from './jwt.service';
+import { createPageInfo } from './pagination';
 
 export const resolvers = {
   Query: {
@@ -21,6 +22,30 @@ export const resolvers = {
       }
 
       return user;
+    },
+    users: async (_parent, args, context) => {
+      if (!JwtService.validate(context.token)) {
+        throw new ServerError('Invalid token', StatusCodes.Unauthorized);
+      }
+
+      const count = await AppDataSource.getRepository(User).count();
+      const pageInfo = createPageInfo(args.input?.limit, args.input?.page, count);
+
+      const users = await AppDataSource.getRepository(User).find({
+        take: pageInfo.limit,
+        skip: pageInfo.offset,
+        order: { name: 'ASC' },
+      });
+
+      if (args.input?.page > pageInfo.totalPages || args.input?.page < 1) {
+        throw new ServerError('Page out of range', StatusCodes.BadUserInput);
+      }
+
+      if (!users?.length) {
+        throw new ServerError('Users not found', StatusCodes.NotFound);
+      }
+
+      return { users: users, count, pageInfo };
     },
   },
   Mutation: {

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { AppDataSource } from '../data-source';
-import { User } from '../entity/User';
+import { AppDataSource } from '../data/data-source';
+import { User } from '../data/entity/User';
 import { StatusCodes } from '../error-formatter';
 import { gql } from 'graphql-tag';
 import { LoginFragment, UserFragment } from './fragments.test';

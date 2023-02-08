@@ -14,7 +14,7 @@ export function createRandomUser(): Omit<User, 'id'> {
 export async function seedUsers(count = 50) {
   !AppDataSource.isInitialized && (await AppDataSource.initialize());
   const seededUsers: User[] = [];
-  Array.from({ length: count }).forEach(async () => {
+  Array.from({ length: count }, () => {
     const user = Object.assign(new User(), createRandomUser());
     seededUsers.push(user);
   });

@@ -14,7 +14,7 @@ const USERS_COUNT = 50;
 
 describe('Query - users', () => {
   before('seed test users', async () => {
-    seedUsers(USERS_COUNT);
+    await seedUsers(USERS_COUNT);
   });
 
   it('should return an error when an invalid authorization token is provided', async () => {

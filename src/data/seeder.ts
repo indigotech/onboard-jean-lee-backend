@@ -37,7 +37,7 @@ export async function seedUsers(count = 50) {
 
 export function seedAddresses(user: User, count = 1) {
   const seededAddresses: Address[] = [];
-  Array.from({ length: count }).forEach(async () => {
+  Array.from({ length: count }, () => {
     const address = Object.assign(new Address(), createRandomAddress());
     address.user = user;
     seededAddresses.push(address);

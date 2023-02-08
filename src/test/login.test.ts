@@ -6,6 +6,7 @@ import { gql } from 'graphql-tag';
 import { LoginFragment, UserFragment } from './fragments.test';
 import { JwtService } from '../jwt.service';
 import { requestMaker } from './request-maker';
+import { clearRepository } from './repository-clear';
 
 const ONE_MINUTE = 60;
 const ONE_HOUR = 60 * ONE_MINUTE;
@@ -52,6 +53,7 @@ describe('Mutation - login', () => {
       name: userInput.name,
       email: userInput.email,
       birthDate: userInput.birthDate,
+      address: [],
     });
     expect(decodedToken.data).to.be.deep.eq({ id: databaseUser.id });
     expect(decodedToken.iat).to.be.approximately(Date.now() / 1000, ONE_MINUTE);
@@ -71,6 +73,7 @@ describe('Mutation - login', () => {
       name: userInput.name,
       email: userInput.email,
       birthDate: userInput.birthDate,
+      address: [],
     });
     expect(decodedToken.data).to.be.deep.eq({ id: databaseUser.id });
     expect(decodedToken.iat).to.be.approximately(Date.now() / 1000, ONE_MINUTE);
@@ -96,6 +99,6 @@ describe('Mutation - login', () => {
   });
 
   after('clearing User table', async () => {
-    await AppDataSource.getRepository(User).clear();
+    await clearRepository(User);
   });
 });

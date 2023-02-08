@@ -8,6 +8,11 @@ import { JwtService } from './jwt.service';
 import { createPageInfo } from './pagination';
 
 export const resolvers = {
+  User: {
+    address(user: User) {
+      return user.address?.length ? user.address : [];
+    },
+  },
   Query: {
     hello: () => 'Hello world!',
     user: async (_parent, args, context) => {
@@ -15,7 +20,10 @@ export const resolvers = {
         throw new ServerError('Invalid token', StatusCodes.Unauthorized);
       }
 
-      const user = await AppDataSource.getRepository(User).findOneBy({ id: args.id });
+      const user = await AppDataSource.getRepository(User).findOne({
+        where: { id: args.id },
+        relations: { address: true },
+      });
 
       if (!user) {
         throw new ServerError('User not found', StatusCodes.NotFound);
@@ -35,6 +43,7 @@ export const resolvers = {
         take: pageInfo.limit,
         skip: pageInfo.offset,
         order: { name: 'ASC' },
+        relations: { address: true },
       });
 
       if (args.input?.page > pageInfo.totalPages || args.input?.page < 1) {
@@ -45,7 +54,7 @@ export const resolvers = {
         throw new ServerError('Users not found', StatusCodes.NotFound);
       }
 
-      return { users: users, count, pageInfo };
+      return { users, count, pageInfo };
     },
   },
   Mutation: {
@@ -87,9 +96,4 @@ export const resolvers = {
       return { user: dbUser, token: JwtService.sign({ id: dbUser.id }, args.input.rememberMe) };
     },
   },
-};
-
-export const mockLogin = {
-  user: { id: 1, name: 'Test', email: 'test@test.com', birthDate: '01-01-2000' },
-  token: 'token',
 };

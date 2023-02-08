@@ -7,6 +7,7 @@ import { gql } from 'graphql-tag';
 import { UserFragment } from './fragments.test';
 import { JwtService } from '../jwt.service';
 import { requestMaker } from './request-maker';
+import { clearRepository } from './repository-clear';
 
 const query = gql`
   mutation CreateUser($input: UserInput!) {
@@ -18,7 +19,7 @@ const query = gql`
 
 describe('Mutation - createUser', () => {
   afterEach('clearing User table', async () => {
-    await AppDataSource.getRepository(User).clear();
+    await clearRepository(User);
   });
 
   it('should successfully create a new user', async () => {
@@ -35,8 +36,8 @@ describe('Mutation - createUser', () => {
       name: userInput.name,
       email: userInput.email,
       birthDate: userInput.birthDate,
+      address: [],
     });
-    expect(responseUser.password).to.be.undefined;
     expect(databaseUser).to.be.deep.eq({
       id: responseUser.id,
       name: userInput.name,
@@ -106,6 +107,7 @@ describe('Mutation - createUser', () => {
       name: userInput.name,
       email: userInput.email,
       birthDate: userInput.birthDate,
+      address: [],
     });
 
     expect(secondResponse.data.createUser).to.be.null;

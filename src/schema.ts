@@ -10,11 +10,23 @@ export const typeDefs = gql`
     totalPages: Int!
   }
 
+  type Address {
+    id: Int!
+    street: String!
+    streetNumber: Int!
+    complement: String
+    neighborhood: String!
+    city: String!
+    state: String!
+    cep: String!
+  }
+
   type User {
     id: Int!
     name: String!
     email: String!
     birthDate: String!
+    address: [Address]
   }
 
   type PaginatedUsers {

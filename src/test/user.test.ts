@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { expect } from 'chai';
-import { AppDataSource } from '../data-source';
-import { User } from '../entity/User';
+import { AppDataSource } from '../data/data-source';
+import { User } from '../data/entity/User';
 import { gql } from 'graphql-tag';
 import { UserFragment } from './fragments.test';
 import { print } from 'graphql';

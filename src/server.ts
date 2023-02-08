@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import { AppDataSource } from './data-source';
+import { AppDataSource } from './data/data-source';
 import { errorFormatter } from './error-formatter';
 import { resolvers } from './resolver';
 import { typeDefs } from './schema';

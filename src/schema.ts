@@ -1,6 +1,15 @@
 import { gql } from 'graphql-tag';
 
 export const typeDefs = gql`
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    page: Int!
+    offset: Int!
+    limit: Int!
+    totalPages: Int!
+  }
+
   type User {
     id: Int!
     name: String!
@@ -8,9 +17,21 @@ export const typeDefs = gql`
     birthDate: String!
   }
 
+  type PaginatedUsers {
+    users: [User!]!
+    count: Int!
+    pageInfo: PageInfo!
+  }
+
+  input UsersInput {
+    limit: Int = 10
+    page: Int = 1
+  }
+
   type Query {
     hello: String
     user(id: Int!): User
+    users(input: UsersInput): PaginatedUsers
   }
 
   input UserInput {

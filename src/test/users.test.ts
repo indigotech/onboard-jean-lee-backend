@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { AppDataSource } from '../data/data-source';
 import { User } from '../data/entity/User';
 import { gql } from 'graphql-tag';
 import { PaginatedUsersFragment } from './fragments.test';
@@ -7,6 +6,8 @@ import { StatusCodes } from '../error-formatter';
 import { seedUsers } from '../data/seeder';
 import { requestMaker } from './request-maker';
 import { JwtService } from '../jwt.service';
+import { clearRepository } from './repository-clear';
+import { Address } from '../data/entity/Address';
 
 const query = gql`query Users($input: UsersInput) { users(input: $input) { ${PaginatedUsersFragment} } }`;
 
@@ -101,7 +102,8 @@ describe('Query - users', () => {
     expect(response.data.users).to.be.null;
   });
 
-  after('clear User table', async () => {
-    await AppDataSource.getRepository(User).clear();
+  after('clear User and Address tables', async () => {
+    await clearRepository(User);
+    await clearRepository(Address);
   });
 });

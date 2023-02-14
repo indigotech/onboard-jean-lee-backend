@@ -1,4 +1,6 @@
-export const UserFragment = 'id name email birthDate';
+export const AddressFragment = `id street streetNumber complement neighborhood city state cep`;
+
+export const UserFragment = `id name email birthDate address { ${AddressFragment} }`;
 
 export const LoginFragment = `user { ${UserFragment} } token`;
 

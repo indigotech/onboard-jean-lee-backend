@@ -19,5 +19,5 @@ export class User {
   birthDate: string;
 
   @OneToMany(() => Address, (address) => address.user, { cascade: true })
-  address: Address[];
+  address: Address[] | null;
 }
